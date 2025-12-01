@@ -1,0 +1,209 @@
+# 股票資訊超連結產生器 - Zeabur 佈署指南
+
+本文件提供詳細的步驟，幫助您將股票資訊超連結產生器佈署到 Zeabur 平台。
+
+## 前置要求
+
+- Zeabur 帳戶（免費註冊：https://zeabur.com）
+- GitHub 帳戶（用於連接代碼倉庫）
+- Git 已安裝在本地機器上
+
+## 佈署步驟
+
+### 第 1 步：準備代碼倉庫
+
+1. **建立 GitHub 倉庫**
+   - 登入 GitHub（https://github.com）
+   - 點擊「New repository」建立新倉庫
+   - 倉庫名稱：`stock-link-generator`
+   - 選擇「Public」（公開）
+   - 點擊「Create repository」
+
+2. **推送代碼到 GitHub**
+   ```bash
+   cd /home/ubuntu/stock-link-generator
+   git remote add origin https://github.com/YOUR_USERNAME/stock-link-generator.git
+   git branch -M main
+   git push -u origin main
+   ```
+   （將 `YOUR_USERNAME` 替換為您的 GitHub 用戶名）
+
+### 第 2 步：連接 Zeabur
+
+1. **登入 Zeabur**
+   - 訪問 https://zeabur.com
+   - 使用 GitHub 帳戶登入
+
+2. **建立新專案**
+   - 點擊「New Project」
+   - 選擇「Import from Git」
+   - 選擇您的 GitHub 倉庫 `stock-link-generator`
+   - 點擊「Import」
+
+3. **配置佈署設定**
+   - **Framework**: Node.js
+   - **Build Command**: `pnpm install && pnpm build`
+   - **Start Command**: `node dist/index.js`
+   - **Port**: 3000（自動配置）
+
+### 第 3 步：環境變數配置
+
+Zeabur 會自動配置以下環境變數，無需手動設定：
+
+| 變數名稱 | 說明 |
+|---------|------|
+| `NODE_ENV` | 自動設為 `production` |
+| `PORT` | 自動設為 3000 |
+
+### 第 4 步：佈署
+
+1. **觸發佈署**
+   - 推送代碼到 GitHub 後，Zeabur 會自動檢測並開始佈署
+   - 您也可以在 Zeabur 儀表板中手動點擊「Deploy」
+
+2. **監控佈署進度**
+   - 在 Zeabur 儀表板中查看佈署日誌
+   - 等待佈署完成（通常需要 2-5 分鐘）
+
+3. **訪問已佈署的應用程式**
+   - 佈署完成後，Zeabur 會提供一個公開 URL
+   - 點擊 URL 即可訪問您的應用程式
+
+## 專案結構說明
+
+```
+stock-link-generator/
+├── client/                 # React 前端應用程式
+│   ├── src/
+│   │   ├── pages/         # 頁面元件
+│   │   ├── components/    # 可重用元件
+│   │   ├── App.tsx        # 主應用程式
+│   │   └── index.css      # 全局樣式
+│   ├── public/            # 靜態資源
+│   └── index.html         # HTML 入口
+├── server/                # Express 後端伺服器
+│   └── index.ts          # 伺服器配置
+├── package.json           # 依賴配置
+├── vite.config.ts         # Vite 配置
+└── tsconfig.json          # TypeScript 配置
+```
+
+## 構建和佈署流程
+
+1. **本地開發**
+   ```bash
+   pnpm install
+   pnpm dev
+   ```
+
+2. **本地構建測試**
+   ```bash
+   pnpm build
+   pnpm start
+   ```
+
+3. **推送到 GitHub**
+   ```bash
+   git add .
+   git commit -m "Update: 新增功能或修復"
+   git push origin main
+   ```
+
+4. **Zeabur 自動佈署**
+   - Zeabur 會自動檢測 GitHub 推送
+   - 執行構建命令
+   - 啟動應用程式
+
+## 常見問題
+
+### Q: 佈署失敗，顯示「Build failed」
+
+**A:** 檢查以下項目：
+- 確保 `package.json` 中的 `build` 和 `start` 命令正確
+- 檢查是否有缺失的依賴
+- 查看 Zeabur 的構建日誌以獲取詳細錯誤信息
+
+### Q: 應用程式無法訪問
+
+**A:** 嘗試以下步驟：
+- 確認佈署已完成（檢查 Zeabur 儀表板）
+- 檢查 URL 是否正確
+- 清除瀏覽器快取並重新載入
+- 檢查防火牆設定
+
+### Q: 如何更新已佈署的應用程式？
+
+**A:** 只需推送新代碼到 GitHub：
+```bash
+git add .
+git commit -m "Update: 描述更改"
+git push origin main
+```
+Zeabur 會自動檢測並重新佈署。
+
+### Q: 如何自訂域名？
+
+**A:** 在 Zeabur 儀表板中：
+1. 進入專案設定
+2. 找到「Domains」部分
+3. 添加您的自訂域名
+4. 按照 DNS 配置指示進行設定
+
+### Q: 應用程式很慢或超時
+
+**A:** 檢查以下項目：
+- Zeabur 的伺服器資源使用情況
+- 網絡連接速度
+- 考慮升級到更高級的 Zeabur 方案
+
+## 監控和維護
+
+### 查看應用程式日誌
+
+在 Zeabur 儀表板中：
+1. 進入您的專案
+2. 點擊「Logs」標籤
+3. 查看實時日誌輸出
+
+### 重新啟動應用程式
+
+在 Zeabur 儀表板中：
+1. 進入您的專案
+2. 點擊「Restart」按鈕
+
+### 回滾到之前的版本
+
+在 Zeabur 儀表板中：
+1. 進入「Deployments」標籤
+2. 選擇之前的部署版本
+3. 點擊「Rollback」
+
+## 效能優化建議
+
+1. **啟用 CDN**
+   - 在 Zeabur 儀表板中啟用 CDN 加速
+   - 提高靜態資源的載入速度
+
+2. **優化構建**
+   - 確保 `pnpm build` 命令已優化
+   - 使用生產環境變數
+
+3. **監控效能**
+   - 定期檢查應用程式的回應時間
+   - 使用 Zeabur 的分析工具
+
+## 支援和幫助
+
+- **Zeabur 文件**: https://docs.zeabur.com
+- **Zeabur 社區**: https://discord.gg/zeabur
+- **GitHub Issues**: 在倉庫中報告問題
+
+## 許可證
+
+本應用程式為開源軟體，採用 MIT 許可證。
+
+---
+
+**最後更新**: 2025 年 12 月 1 日
+
+如有任何問題或建議，歡迎提出反饋！
